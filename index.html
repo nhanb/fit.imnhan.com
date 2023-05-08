@@ -5,6 +5,11 @@
     <meta charset="utf-8" />
     <title>/fit/ utils</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      input {
+        width: 4rem;
+      }
+    </style>
   </head>
   <body>
     <form action="javascript:void(0);">
@@ -40,11 +45,27 @@
           <b><span id="vigorous-minutes"></span></b> minutes of <b>vigorous</b> cardio
         </li>
       </ul>
-
-      <footer style="margin-top: 2rem; font-style: italic; color: grey">Your inputs are autosaved locally.</footer>
-      <img src="bottom.png" style="position: fixed; z-index: -1; right: 0; bottom: 0" />
     </form>
-    <style></style>
+
+    <h1>BMI</h1>
+    <p>
+      Formula taken from
+      <a href="https://www.calculator.net/bmi-calculator.html">calculator.net</a>.
+    </p>
+
+    <p>
+      <label for="height">Height (cm): <input id="height" type="number" value="169" /></label>
+    </p>
+    <p>
+      <label for="weight">Weight (kg): <input id="weight" type="number" value="85" /></label>
+    </p>
+    <p>Your BMI is <b id="bmi"></b> kg/m<sup>2</sup>. You're <b id="bmi-verdict"></b>.</p>
+
+    <footer style="margin-top: 2rem; font-style: italic; color: grey; margin-bottom: 300px">
+      Your inputs are autosaved locally.
+    </footer>
+    <img src="bottom.png" style="position: fixed; z-index: -1; right: 0; bottom: 0" />
+
     <script>
       window.addEventListener("load", () => {
         const ageEl = document.querySelector("#age");
@@ -54,8 +75,12 @@
         const workoutsEl = document.querySelector("#workouts");
         const moderateMinsEl = document.querySelector("#moderate-minutes");
         const vigorousMinsEl = document.querySelector("#vigorous-minutes");
+        const heightEl = document.querySelector("#height");
+        const weightEl = document.querySelector("#weight");
+        const bmiEl = document.querySelector("#bmi");
+        const bmiVerdictEl = document.querySelector("#bmi-verdict");
 
-        const inputEls = [ageEl, workoutsEl];
+        const inputEls = [ageEl, workoutsEl, heightEl, weightEl];
 
         function saveInputs() {
           inputEls.forEach((el) => {
@@ -71,7 +96,7 @@
           });
         }
 
-        function calculateCardio() {
+        function calculate() {
           const age = Number(ageEl.value);
           const max = 220 - age;
           maxEl.innerHTML = `<b>${max}</b>`;
@@ -82,15 +107,29 @@
           moderateMinsEl.innerHTML = Math.round(150 / workouts);
           vigorousMinsEl.innerHTML = Math.round(75 / workouts);
 
+          const height = Number(heightEl.value);
+          const weight = Number(weightEl.value);
+          const bmi = Math.round((weight / Math.pow(height / 100, 2)) * 10) / 10;
+          bmiEl.innerHTML = bmi;
+          if (bmi < 18.5) {
+            bmiVerdictEl.innerHTML = "underweight";
+          } else if (bmi < 25) {
+            bmiVerdictEl.innerHTML = "normal";
+          } else if (bmi < 30) {
+            bmiVerdictEl.innerHTML = "overweight";
+          } else {
+            bmiVerdictEl.innerHTML = "obese";
+          }
+
           saveInputs();
         }
 
         // Startup
         loadInputs();
-        calculateCardio();
+        calculate();
 
         inputEls.forEach((el) => {
-          el.addEventListener("change", calculateCardio);
+          el.addEventListener("change", calculate);
         });
       });
     </script>
