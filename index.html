@@ -10,6 +10,13 @@
     <form action="javascript:void(0);">
       <h1>Cardio</h1>
 
+      <p>
+        Formulae taken from
+        <a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/exercise-intensity/art-20046887"
+          >Mayo Clinic</a
+        >.
+      </p>
+
       <label for="age">
         Age:
         <input id="age" type="number" value="30" />
@@ -34,12 +41,7 @@
         </li>
       </ul>
 
-      <p style="font-style: italic">
-        Formula from
-        <a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/exercise-intensity/art-20046887"
-          >Mayo Clinic</a
-        >
-      </p>
+      <footer style="margin-top: 2rem; font-style: italic; color: grey">Your inputs are autosaved locally.</footer>
     </form>
     <style></style>
     <script>
@@ -52,6 +54,22 @@
         const moderateMinsEl = document.querySelector("#moderate-minutes");
         const vigorousMinsEl = document.querySelector("#vigorous-minutes");
 
+        const inputEls = [ageEl, workoutsEl];
+
+        function saveInputs() {
+          inputEls.forEach((el) => {
+            localStorage.setItem(el.id, el.value);
+          });
+        }
+        function loadInputs() {
+          inputEls.forEach((el) => {
+            const val = localStorage.getItem(el.id);
+            if (val !== null) {
+              el.value = val;
+            }
+          });
+        }
+
         function calculateCardio() {
           const age = Number(ageEl.value);
           const max = 220 - age;
@@ -62,11 +80,17 @@
           const workouts = Number(workoutsEl.value);
           moderateMinsEl.innerHTML = Math.round(150 / workouts);
           vigorousMinsEl.innerHTML = Math.round(75 / workouts);
+
+          saveInputs();
         }
 
+        // Startup
+        loadInputs();
         calculateCardio();
-        ageEl.addEventListener("change", calculateCardio);
-        workoutsEl.addEventListener("change", calculateCardio);
+
+        inputEls.forEach((el) => {
+          el.addEventListener("change", calculateCardio);
+        });
       });
     </script>
   </body>
