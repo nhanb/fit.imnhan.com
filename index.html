@@ -1,0 +1,72 @@
+<!-- vim: set tw=120 :-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>/fit/ utils</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <form action="javascript:void(0);">
+      <h1>Cardio</h1>
+
+      <label for="age">
+        Age:
+        <input id="age" type="number" value="30" />
+      </label>
+      <ul>
+        <li>Max heart rate: <span id="max"></span></li>
+        <li>Moderate HR: <span id="moderate"></span></li>
+        <li>Vigorous HR: <span id="vigorous"></span></li>
+      </ul>
+
+      <label for="workouts">
+        Workouts per week:
+        <input id="workouts" type="number" value="5" />
+      </label>
+      <p>Per workout you should do:</p>
+      <ul>
+        <li>
+          <b><span id="moderate-minutes"></span></b> minutes of <b>moderate</b> cardio, or
+        </li>
+        <li>
+          <b><span id="vigorous-minutes"></span></b> minutes of <b>vigorous</b> cardio
+        </li>
+      </ul>
+
+      <p style="font-style: italic">
+        Formula from
+        <a href="https://www.mayoclinic.org/healthy-lifestyle/fitness/in-depth/exercise-intensity/art-20046887"
+          >Mayo Clinic</a
+        >
+      </p>
+    </form>
+    <style></style>
+    <script>
+      window.addEventListener("load", () => {
+        const ageEl = document.querySelector("#age");
+        const maxEl = document.querySelector("#max");
+        const moderateEl = document.querySelector("#moderate");
+        const vigorousEl = document.querySelector("#vigorous");
+        const workoutsEl = document.querySelector("#workouts");
+        const moderateMinsEl = document.querySelector("#moderate-minutes");
+        const vigorousMinsEl = document.querySelector("#vigorous-minutes");
+
+        const calculateCardio = () => {
+          const age = Number(ageEl.value);
+          const max = 220 - age;
+          maxEl.innerHTML = `<b>${max}</b>`;
+          moderateEl.innerHTML = `<b>${Math.round(max / 2)}</b> to <b>${Math.round((max * 70) / 100)}</b>`;
+          vigorousEl.innerHTML = `<b>${Math.round((max * 70) / 100)}</b> to <b>${Math.round((max * 85) / 100)}</b>`;
+
+          const workouts = Number(workoutsEl.value);
+          moderateMinsEl.innerHTML = Math.round(150 / workouts);
+          vigorousMinsEl.innerHTML = Math.round(75 / workouts);
+        };
+
+        calculateCardio();
+        ageEl.addEventListener("change", calculateCardio);
+      });
+    </script>
+  </body>
+</html>
