@@ -52,7 +52,7 @@
         const moderateMinsEl = document.querySelector("#moderate-minutes");
         const vigorousMinsEl = document.querySelector("#vigorous-minutes");
 
-        const calculateCardio = () => {
+        function calculateCardio() {
           const age = Number(ageEl.value);
           const max = 220 - age;
           maxEl.innerHTML = `<b>${max}</b>`;
@@ -62,7 +62,7 @@
           const workouts = Number(workoutsEl.value);
           moderateMinsEl.innerHTML = Math.round(150 / workouts);
           vigorousMinsEl.innerHTML = Math.round(75 / workouts);
-        };
+        }
 
         calculateCardio();
         ageEl.addEventListener("change", calculateCardio);
